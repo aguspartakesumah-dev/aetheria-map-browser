@@ -3,354 +3,189 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#070b14">
 <title>Aetheria Virtual City</title>
 <style>
-:root {
-  --bg:#070b14; --panel:#101a2b; --cyan:#42e8ff;
-  --purple:#a78bfa; --text:#eaf7ff; --muted:#8da5bd;
-}
-* { box-sizing:border-box }
-body {
-  margin:0; background:var(--bg); color:var(--text);
-  font-family:Arial,sans-serif;
-}
-header {
-  padding:20px 16px; background:#0c1423;
-  border-bottom:1px solid #1d3e54;
-}
-.logo { font-size:23px;font-weight:900;color:var(--cyan) }
-.sub { font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:7px }
-nav { display:flex;gap:8px;padding:12px;overflow:auto }
-button {
-  border:1px solid #28516b;border-radius:9px;padding:11px 14px;
-  color:var(--cyan);background:#102b3d;font-weight:bold;cursor:pointer;
-}
-button:active { opacity:.7 }
-nav button { flex-shrink:0 }
-button.active { background:#16445a;border-color:var(--cyan) }
-main { padding:12px }
-.stats {
-  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
-  margin-bottom:12px;
-}
-.stat {
-  background:var(--panel);border:1px solid #20364d;
-  border-radius:10px;padding:12px 5px;text-align:center;
-}
-.stat strong { display:block;color:var(--cyan);font-size:20px }
-.stat span { font-size:10px;color:var(--muted) }
-.mapbox {
-  border:1px solid #23516a;border-radius:13px;
-  overflow:hidden;position:relative;background:#0a1524;
-}
-.maphead { padding:12px;background:#101a2b;display:flex;justify-content:space-between;gap:8px;align-items:center }
-.maphead small { color:var(--muted) }
-#citymap { width:100%;display:block;touch-action:pan-y }
-.district { cursor:pointer }
-.district:active { opacity:.7 }
-.mapnote { padding:11px;color:var(--muted);font-size:12px }
-.panel {
-  margin-top:14px;padding:16px;background:var(--panel);
-  border:1px solid #20364d;border-radius:12px;
-}
-h2 { margin:0 0 12px;font-size:17px;color:var(--cyan) }
-p { color:var(--muted);font-size:13px;line-height:1.6 }
-input,select {
-  display:block;width:100%;padding:13px;margin:9px 0;
-  border-radius:8px;border:1px solid #29445d;
-  background:#091321;color:white;font-size:15px;
-}
-.full { width:100%;margin-top:7px }
-.cardid {
-  padding:16px;border:1px solid var(--cyan);border-radius:12px;
-  background:linear-gradient(135deg,#102d40,#17172f);
-}
-.idtop { color:var(--cyan);font-weight:bold;letter-spacing:2px }
-.idnumber { font-size:21px;font-weight:bold;margin:15px 0 }
-.hidden { display:none!important }
-footer { text-align:center;padding:22px;color:#708ba5;font-size:11px }
-#notice { font-size:12px;color:var(--muted);margin-top:9px }
+:root{--bg:#070b14;--panel:#101a2b;--cyan:#42e8ff;--purple:#a78bfa;--text:#eaf7ff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{padding:20px 16px;background:#0c1425;border-bottom:1px solid #1d3e54}
+h1{margin:0;color:var(--cyan);font-size:25px}
+header p{letter-spacing:3px;color:#91a8c0;font-size:11px}
+nav{display:flex;gap:8px;padding:12px;overflow:auto}
+button{background:#103347;color:var(--cyan);border:1px solid #24536a;padding:13px;border-radius:10px;font-weight:bold;cursor:pointer}
+nav button{flex:1;white-space:nowrap}
+main{padding:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--panel);border:1px solid #243950;border-radius:12px;padding:12px 5px;text-align:center}
+.stat strong{display:block;color:var(--cyan);font-size:22px}
+.stat span{font-size:11px;color:#9eb3c8}
+h2{font-size:18px}
+#map{position:relative;overflow:hidden;border:1px solid #24536a;border-radius:14px;background:#101d2b}
+.city{position:relative;min-height:490px;background-color:#0b1924;background-image:linear-gradient(35deg,transparent 47%,#203747 48%,#203747 52%,transparent 53%),linear-gradient(125deg,transparent 47%,#203747 48%,#203747 52%,transparent 53%);background-size:100px 100px}
+.district{position:absolute;width:42%;min-height:95px;border:1px solid var(--cyan);border-radius:12px;background:#102d40eF;box-shadow:0 0 15px #42e8ff20;color:white;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;font-size:13px}
+.district b{font-size:25px}
+.district:focus,.district:hover{background:#20435a;outline:2px solid var(--purple)}
+.d1{top:5%;left:4%}.d2{top:5%;right:4%}
+.d3{top:37%;left:4%}.d4{top:37%;right:4%}
+.d5{bottom:5%;left:29%;width:42%}
+.hint{color:#a5b9ce;font-size:13px;line-height:1.6}
+.panel{margin-top:14px;background:var(--panel);padding:16px;border:1px solid #243950;border-radius:14px}
+input,select{width:100%;padding:13px;margin:6px 0 12px;background:#091321;border:1px solid #34516a;border-radius:9px;color:white;font-size:15px}
+label{font-size:13px;color:#b7cce0}
+.primary{width:100%;background:#073c50;margin-top:5px}
+#card{display:none;border:1px solid var(--cyan);border-radius:14px;padding:18px;background:linear-gradient(135deg,#102c44,#17152f)}
+#card h3{color:var(--cyan);margin-top:0}
+.id{font-size:20px;color:#d4bfff;font-weight:bold}
+footer{text-align:center;color:#728da6;font-size:12px;padding:25px}
 </style>
 </head>
 <body>
 <header>
-  <div class="logo">✦ AETHERIA</div>
-  <div class="sub">VIRTUAL CITY • DIGITAL CIVILIZATION</div>
+<h1>✦ AETHERIA CITY</h1>
+<p>VIRTUAL CITY NETWORK</p>
 </header>
-
 <nav>
-  <button class="active" data-page="city">Peta Kota</button>
-  <button data-page="register">Daftar Penduduk</button>
-  <button data-page="identity">Kartu Penduduk</button>
+<button onclick="showSection('mapSection')">🗺️ Peta Kota</button>
+<button onclick="showSection('register')">＋ Daftar Penduduk</button>
+<button onclick="showSection('residents')">▤ Penduduk</button>
 </nav>
-
 <main>
-<section id="city">
-  <div class="stats">
-    <div class="stat"><strong id="population">0</strong><span>Penduduk di perangkat ini</span></div>
-    <div class="stat"><strong>04</strong><span>Distrik kota</span></div>
-    <div class="stat"><strong>2D</strong><span>Virtual world</span></div>
-  </div>
+<div class="stats">
+<div class="stat"><strong id="count">0</strong><span>Penduduk</span></div>
+<div class="stat"><strong>5</strong><span>Distrik</span></div>
+<div class="stat"><strong>2D</strong><span>Mode Kota</span></div>
+</div>
 
-  <div class="mapbox">
-    <div class="maphead">
-      <div><b>MAP // AETHERIA</b><br><small>Pilih distrik untuk melihat detail</small></div>
-      <small>● ONLINE DEMO</small>
-    </div>
-
-    <svg id="citymap" viewBox="0 0 360 470"
-         xmlns="http://www.w3.org/2000/svg"
-         aria-label="Peta virtual Aetheria">
-      <defs>
-        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
-          <path d="M20 0H0V20" fill="none" stroke="#173047" stroke-width=".7"/>
-        </pattern>
-        <filter id="glow">
-          <feGaussianBlur stdDeviation="3" result="blur"/>
-          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
-      </defs>
-      <rect width="360" height="470" fill="#091523"/>
-      <rect width="360" height="470" fill="url(#grid)"/>
-
-      <!-- Jalan kota -->
-      <g fill="none" stroke-linecap="round">
-        <path d="M-20 125L380 125 M-20 280L380 280"
-          stroke="#173c51" stroke-width="25"/>
-        <path d="M115 -10L115 490 M255 -10L255 490"
-          stroke="#173c51" stroke-width="22"/>
-        <path d="M-20 125L380 125 M-20 280L380 280 M115 -10L115 490 M255 -10L255 490"
-          stroke="#28677d" stroke-width="1.5" stroke-dasharray="7 7"/>
-        <path d="M-20 125L380 125 M-20 280L380 280 M115 -10L115 490 M255 -10L255 490"
-          stroke="#36d8f5" stroke-width="1" opacity=".65"/>
-      </g>
-
-      <!-- Distrik -->
-      <g class="district" data-name="Pusat Pemerintahan" data-detail="Balai Kota Aetheria dan pusat administrasi.">
-        <rect x="17" y="20" width="82" height="86" rx="7" fill="#172d46" stroke="#42e8ff"/>
-        <rect x="32" y="43" width="52" height="40" rx="3" fill="#20465d" stroke="#42e8ff"/>
-        <path d="M29 43L58 29L87 43Z" fill="#42e8ff" opacity=".8"/>
-        <path d="M43 51V76 M58 51V76 M73 51V76" stroke="#b3f5ff" stroke-width="3"/>
-        <text x="58" y="94" fill="#fff" font-size="8" text-anchor="middle">CITY HALL</text>
-      </g>
-
-      <g class="district" data-name="Neon Business District" data-detail="Kawasan bisnis, kantor, dan pusat perdagangan.">
-        <rect x="153" y="20" width="86" height="86" rx="7" fill="#211b3f" stroke="#a78bfa"/>
-        <rect x="164" y="46" width="20" height="39" fill="#473578" stroke="#a78bfa"/>
-        <rect x="190" y="32" width="20" height="53" fill="#3d3470" stroke="#a78bfa"/>
-        <rect x="216" y="52" width="13" height="33" fill="#473578" stroke="#a78bfa"/>
-        <g fill="#42e8ff">
-          <rect x="169" y="52" width="4" height="5"/><rect x="169" y="63" width="4" height="5"/>
-          <rect x="196" y="40" width="5" height="5"/><rect x="204" y="40" width="3" height="5"/>
-          <rect x="196" y="52" width="5" height="5"/><rect x="204" y="52" width="3" height="5"/>
-        </g>
-        <text x="196" y="96" fill="#fff" font-size="8" text-anchor="middle">BUSINESS</text>
-      </g>
-
-      <g class="district" data-name="Residential District" data-detail="Kawasan rumah dan lingkungan penduduk.">
-        <rect x="17" y="151" width="82" height="111" rx="7" fill="#14352f" stroke="#43e6b0"/>
-        <g fill="#1d6254" stroke="#43e6b0">
-          <rect x="27" y="164" width="24" height="22"/><rect x="62" y="164" width="24" height="22"/>
-          <rect x="27" y="197" width="24" height="22"/><rect x="62" y="197" width="24" height="22"/>
-          <rect x="43" y="228" width="24" height="22"/>
-        </g>
-        <text x="58" y="255" fill="#fff" font-size="7" text-anchor="middle">RESIDENCE</text>
-      </g>
-
-      <g class="district" data-name="Police Headquarters" data-detail="Markas polisi virtual Aetheria.">
-        <rect x="153" y="151" width="86" height="111" rx="7" fill="#142a4c" stroke="#6ca5ff"/>
-        <rect x="171" y="174" width="50" height="49" rx="3" fill="#1d4771" stroke="#6ca5ff"/>
-        <path d="M196 181L211 187V199Q207 211 196 216Q185 211 181 199V187Z" fill="#6ca5ff"/>
-        <text x="196" y="198" text-anchor="middle" fill="#081321" font-size="16" font-weight="bold">★</text>
-        <text x="196" y="244" fill="#fff" font-size="8" text-anchor="middle">POLICE HQ</text>
-      </g>
-
-      <g class="district" data-name="Central Park" data-detail="Taman kota dan tempat berkumpul warga.">
-        <rect x="17" y="306" width="82" height="142" rx="7" fill="#10392f" stroke="#43e6b0"/>
-        <g fill="#1a7056" stroke="#43e6b0">
-          <circle cx="39" cy="330" r="11"/><circle cx="76" cy="330" r="11"/>
-          <circle cx="39" cy="365" r="11"/><circle cx="76" cy="365" r="11"/>
-          <circle cx="39" cy="400" r="11"/><circle cx="76" cy="400" r="11"/>
-        </g>
-        <path d="M58 315V435 M25 382H91" stroke="#b2ffe2" stroke-width="2" stroke-dasharray="3 4"/>
-        <text x="58" y="436" fill="#fff" font-size="8" text-anchor="middle">CENTRAL PARK</text>
-      </g>
-
-      <g class="district" data-name="Technology District" data-detail="Kawasan teknologi, laboratorium, dan inovasi.">
-        <rect x="153" y="306" width="86" height="142" rx="7" fill="#322344" stroke="#d18bff"/>
-        <rect x="171" y="329" width="50" height="66" rx="4" fill="#4a3064" stroke="#d18bff"/>
-        <path d="M181 345H211 M181 357H211 M181 369H202" stroke="#42e8ff" stroke-width="3"/>
-        <circle cx="196" cy="414" r="12" fill="none" stroke="#d18bff" stroke-width="2"/>
-        <circle cx="196" cy="414" r="5" fill="#42e8ff" filter="url(#glow)"/>
-        <text x="196" y="438" fill="#fff" font-size="7" text-anchor="middle">TECH DISTRICT</text>
-      </g>
-
-      <g class="district" data-name="Harbor District" data-detail="Kawasan pelabuhan virtual dan pusat logistik.">
-        <rect x="275" y="151" width="68" height="297" rx="7" fill="#103047" stroke="#42b9ff"/>
-        <path d="M283 180H335 M283 195H335 M283 210H335 M283 225H335 M283 240H335"
-          stroke="#42b9ff" stroke-width="1" opacity=".7"/>
-        <rect x="285" y="270" width="46" height="22" fill="#1b5875" stroke="#42b9ff"/>
-        <rect x="285" y="301" width="46" height="22" fill="#1b5875" stroke="#42b9ff"/>
-        <rect x="285" y="332" width="46" height="22" fill="#1b5875" stroke="#42b9ff"/>
-        <text x="309" y="385" fill="#fff" font-size="8" text-anchor="middle">HARBOR</text>
-        <text x="309" y="398" fill="#9ccfff" font-size="7" text-anchor="middle">LOGISTICS</text>
-      </g>
-
-      <text x="180" y="462" fill="#42e8ff" font-size="8" text-anchor="middle" letter-spacing="2">AETHERIA CITY GRID</text>
-    </svg>
-    <div class="mapnote">Peta fiksi untuk simulasi kota. Ketuk distrik untuk melihat keterangannya.</div>
-  </div>
-
-  <div class="panel">
-    <h2 id="districtTitle">SELAMAT DATANG DI AETHERIA</h2>
-    <p id="districtDetail">Pilih distrik pada peta untuk mengenal kawasan kota virtual.</p>
-    <button id="goRegister" class="full">＋ Daftar Menjadi Penduduk</button>
-  </div>
+<section id="mapSection">
+<h2>🌐 Peta Virtual</h2>
+<p class="hint">Ketuk distrik untuk menjelajahi wilayah Aetheria.</p>
+<div id="map">
+<div class="city">
+<button class="district d1" onclick="district('Pusat Kota')"><b>🏙️</b>CENTRAL CITY</button>
+<button class="district d2" onclick="district('Distrik Neon')"><b>🌆</b>NEON DISTRICT</button>
+<button class="district d3" onclick="district('Kawasan Hunian')"><b>🏘️</b>RESIDENTIAL</button>
+<button class="district d4" onclick="district('Zona Industri')"><b>🏭</b>INDUSTRIAL ZONE</button>
+<button class="district d5" onclick="district('Balai Kota')"><b>🏛️</b>CITY HALL</button>
+</div>
+</div>
+<div class="panel">
+<strong id="districtName">AETHERIA CITY</strong>
+<p id="districtInfo" class="hint">Selamat datang di kota virtual kita!</p>
+</div>
 </section>
 
-<section id="register" class="hidden">
-  <div class="panel">
-    <h2>PENDAFTARAN PENDUDUK</h2>
-    <p>Buat identitas untuk karakter penduduk virtualmu.</p>
-    <form id="residentForm">
-      <label for="residentName">Nama penduduk</label>
-      <input id="residentName" maxlength="35" required placeholder="Contoh: Parta Aether">
-      <label for="residentJob">Pekerjaan yang diinginkan</label>
-      <select id="residentJob">
-        <option>Penduduk</option>
-        <option>Polisi</option>
-        <option>Petugas Medis</option>
-        <option>Pengusaha</option>
-        <option>Pegawai Balai Kota</option>
-        <option>Teknisi</option>
-      </select>
-      <button class="full" type="submit">BUAT KARTU PENDUDUK</button>
-    </form>
-    <div id="notice">Demo: data akan disimpan di browser perangkat ini saja.</div>
-  </div>
+<section class="panel" id="register">
+<h2>🪪 Pendaftaran Penduduk</h2>
+<p class="hint">Buat identitas karakter resmi Aetheria.</p>
+<form id="form">
+<label>Nama penduduk</label>
+<input id="name" maxlength="35" placeholder="Nama karakter kamu" required>
+<label>Username</label>
+<input id="username" maxlength="20" placeholder="@username" required>
+<label>Pekerjaan</label>
+<select id="job">
+<option>Warga Sipil</option>
+<option>Polisi</option>
+<option>Dokter</option>
+<option>Pedagang</option>
+<option>Pengusaha</option>
+<option>Pegawai Pemerintah</option>
+<option>Pengemudi</option>
+</select>
+<label>Distrik tempat tinggal</label>
+<select id="home">
+<option>Central City</option>
+<option>Neon District</option>
+<option>Residential</option>
+<option>Industrial Zone</option>
+</select>
+<button class="primary" type="submit">BUAT KARTU PENDUDUK</button>
+</form>
 </section>
 
-<section id="identity" class="hidden">
-  <div class="panel">
-    <h2>DIGITAL RESIDENT ID</h2>
-    <div id="emptyCard">
-      <p>Kamu belum memiliki kartu penduduk di browser ini. Daftar dahulu untuk membuat kartu.</p>
-      <button id="registerFromCard">Daftar Sekarang</button>
-    </div>
-    <div id="residentCard" class="cardid hidden">
-      <div class="idtop">AETHERIA • RESIDENT</div>
-      <p style="color:#a6eaff">KARTU IDENTITAS VIRTUAL</p>
-      <div class="idnumber" id="cardNumber">AET-000001</div>
-      <div style="font-size:21px;font-weight:bold" id="cardName"></div>
-      <p id="cardJob"></p>
-      <p id="cardDate"></p>
-      <small style="color:#ffdf9a">IDENTITAS SIMULASI — BUKAN DOKUMEN RESMI</small>
-    </div>
-    <button id="deleteResident" class="full hidden">Hapus data lokal</button>
-  </div>
+<section class="panel" id="residents">
+<h2>👥 Direktori Penduduk</h2>
+<p class="hint">Penduduk yang terdaftar di perangkat browser ini.</p>
+<div id="list">Belum ada penduduk terdaftar.</div>
+</section>
+
+<section class="panel" id="card">
+<h3>✦ AETHERIA CITIZEN CARD</h3>
+<p>KARTU IDENTITAS PENDUDUK VIRTUAL</p>
+<div class="id" id="cardId"></div>
+<h2 id="cardName"></h2>
+<p id="cardDetails"></p>
+<p class="hint">IDENTITAS SIMULASI • AETHERIA CITY</p>
+<button onclick="window.print()">CETAK / SIMPAN PDF</button>
 </section>
 </main>
-
-<footer>AETHERIA VIRTUAL CITY · A WORLD OF YOUR OWN</footer>
+<footer>AETHERIA CITY © VIRTUAL WORLD<br>Versi 1.0 • Komunitas Digital</footer>
 
 <script>
-const $ = id => document.getElementById(id);
-const storageKey = "aetheria_demo_resident_v1";
+const key='aetheria_residents_v1';
+let residents=[];
+try{residents=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(residents))residents=[]}catch(e){residents=[]}
 
-function getResident() {
-  try {
-    return JSON.parse(localStorage.getItem(storageKey) || "null");
-  } catch {
-    return null;
-  }
+function showSection(id){
+document.getElementById(id).scrollIntoView({behavior:'smooth'});
 }
-
-function showPage(page) {
-  ["city", "register", "identity"].forEach(id => {
-    $(id).classList.toggle("hidden", id !== page);
-  });
-  document.querySelectorAll("nav button").forEach(btn => {
-    btn.classList.toggle("active", btn.dataset.page === page);
-  });
-  if (page === "identity") renderCard();
-  window.scrollTo(0, 0);
+function district(name){
+document.getElementById('districtName').textContent=name;
+document.getElementById('districtInfo').textContent='Kamu sedang menjelajahi '+name+'. Selamat datang!';
 }
-
-document.querySelectorAll("nav button").forEach(btn => {
-  btn.addEventListener("click", () => showPage(btn.dataset.page));
-});
-
-$("goRegister").addEventListener("click", () => showPage("register"));
-$("registerFromCard").addEventListener("click", () => showPage("register"));
-
-document.querySelectorAll(".district").forEach(district => {
-  district.addEventListener("click", () => {
-    $("districtTitle").textContent = district.dataset.name.toUpperCase();
-    $("districtDetail").textContent = district.dataset.detail;
-  });
-});
-
-function renderCard() {
-  const resident = getResident();
-  const exists = !!resident;
-  $("emptyCard").classList.toggle("hidden", exists);
-  $("residentCard").classList.toggle("hidden", !exists);
-  $("deleteResident").classList.toggle("hidden", !exists);
-
-  if (!resident) return;
-
-  $("cardNumber").textContent = resident.id;
-  $("cardName").textContent = resident.name;
-  $("cardJob").textContent = "PEKERJAAN: " + resident.job;
-  $("cardDate").textContent = "BERGABUNG: " + resident.date;
+function render(){
+document.getElementById('count').textContent=residents.length;
+document.getElementById('list').innerHTML='';
+if(!residents.length){
+document.getElementById('list').textContent='Belum ada penduduk terdaftar.';
+return;
 }
-
-function updatePopulation() {
-  $("population").textContent = getResident() ? "1" : "0";
+residents.forEach(r=>{
+const item=document.createElement('div');
+item.className='panel';
+const title=document.createElement('strong');
+title.textContent=r.name;
+const info=document.createElement('p');
+info.className='hint';
+info.textContent=r.id+' • '+r.job+' • '+r.home;
+const btn=document.createElement('button');
+btn.textContent='Lihat Kartu';
+btn.onclick=()=>viewCard(r);
+item.append(title,info,btn);
+document.getElementById('list').appendChild(item);
+});
 }
-
-$("residentForm").addEventListener("submit", event => {
-  event.preventDefault();
-
-  const name = $("residentName").value.trim();
-  if (!name) return;
-
-  if (getResident()) {
-    alert("Browser ini sudah memiliki kartu penduduk. Hapus data lokal lama jika ingin membuat ulang.");
-    showPage("identity");
-    return;
-  }
-
-  const resident = {
-    id: "AET-" + Date.now().toString().slice(-8),
-    name,
-    job: $("residentJob").value,
-    date: new Date().toLocaleDateString("id-ID", {
-      day: "2-digit", month: "short", year: "numeric"
-    })
-  };
-
-  try {
-    localStorage.setItem(storageKey, JSON.stringify(resident));
-    updatePopulation();
-    showPage("identity");
-  } catch {
-    alert("Penyimpanan browser tidak tersedia. Periksa pengaturan browser.");
-  }
+function viewCard(r){
+document.getElementById('cardId').textContent=r.id;
+document.getElementById('cardName').textContent=r.name;
+document.getElementById('cardDetails').textContent=r.username+' | '+r.job+' | '+r.home;
+document.getElementById('card').style.display='block';
+showSection('card');
+}
+document.getElementById('form').addEventListener('submit',e=>{
+e.preventDefault();
+const name=document.getElementById('name').value.trim();
+const username=document.getElementById('username').value.trim();
+if(!name||!username)return;
+if(residents.some(r=>r.username.toLowerCase()===username.toLowerCase())){
+alert('Username sudah digunakan pada browser ini.');
+return;
+}
+const r={
+id:'AET-'+Date.now().toString().slice(-8),
+name,username,job:document.getElementById('job').value,
+home:document.getElementById('home').value
+};
+residents.push(r);
+try{localStorage.setItem(key,JSON.stringify(residents));}
+catch(err){alert('Penyimpanan browser gagal. Periksa ruang penyimpanan.');return;}
+render();
+viewCard(r);
+e.target.reset();
 });
-
-$("deleteResident").addEventListener("click", () => {
-  if (!confirm("Hapus kartu penduduk dari browser ini?")) return;
-  localStorage.removeItem(storageKey);
-  updatePopulation();
-  renderCard();
-});
-
-updatePopulation();
-renderCard();
+render();
 </script>
 </body>
-    </html>
-
+</html>
