@@ -4,188 +4,300 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#070b14">
-<title>Aetheria Virtual City</title>
+<meta name="theme-color" content="#e8f7ff">
+<title>Aetheria City</title>
 <style>
-:root{--bg:#070b14;--panel:#101a2b;--cyan:#42e8ff;--purple:#a78bfa;--text:#eaf7ff}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
-header{padding:20px 16px;background:#0c1425;border-bottom:1px solid #1d3e54}
-h1{margin:0;color:var(--cyan);font-size:25px}
-header p{letter-spacing:3px;color:#91a8c0;font-size:11px}
-nav{display:flex;gap:8px;padding:12px;overflow:auto}
-button{background:#103347;color:var(--cyan);border:1px solid #24536a;padding:13px;border-radius:10px;font-weight:bold;cursor:pointer}
-nav button{flex:1;white-space:nowrap}
-main{padding:12px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:var(--panel);border:1px solid #243950;border-radius:12px;padding:12px 5px;text-align:center}
-.stat strong{display:block;color:var(--cyan);font-size:22px}
-.stat span{font-size:11px;color:#9eb3c8}
-h2{font-size:18px}
-#map{position:relative;overflow:hidden;border:1px solid #24536a;border-radius:14px;background:#101d2b}
-.city{position:relative;min-height:490px;background-color:#0b1924;background-image:linear-gradient(35deg,transparent 47%,#203747 48%,#203747 52%,transparent 53%),linear-gradient(125deg,transparent 47%,#203747 48%,#203747 52%,transparent 53%);background-size:100px 100px}
-.district{position:absolute;width:42%;min-height:95px;border:1px solid var(--cyan);border-radius:12px;background:#102d40eF;box-shadow:0 0 15px #42e8ff20;color:white;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;font-size:13px}
-.district b{font-size:25px}
-.district:focus,.district:hover{background:#20435a;outline:2px solid var(--purple)}
-.d1{top:5%;left:4%}.d2{top:5%;right:4%}
-.d3{top:37%;left:4%}.d4{top:37%;right:4%}
-.d5{bottom:5%;left:29%;width:42%}
-.hint{color:#a5b9ce;font-size:13px;line-height:1.6}
-.panel{margin-top:14px;background:var(--panel);padding:16px;border:1px solid #243950;border-radius:14px}
-input,select{width:100%;padding:13px;margin:6px 0 12px;background:#091321;border:1px solid #34516a;border-radius:9px;color:white;font-size:15px}
-label{font-size:13px;color:#b7cce0}
-.primary{width:100%;background:#073c50;margin-top:5px}
-#card{display:none;border:1px solid var(--cyan);border-radius:14px;padding:18px;background:linear-gradient(135deg,#102c44,#17152f)}
-#card h3{color:var(--cyan);margin-top:0}
-.id{font-size:20px;color:#d4bfff;font-weight:bold}
-footer{text-align:center;color:#728da6;font-size:12px;padding:25px}
+body{margin:0;font-family:Arial,sans-serif;background:#eaf5f8;color:#23364a}
+button,input,select{font:inherit}
+button{border:0;cursor:pointer}
+.top{position:relative;z-index:2;padding:14px;background:#fff;
+display:flex;justify-content:space-between;align-items:center;
+border-radius:0 0 18px 18px;box-shadow:0 3px 12px #20364b20}
+.brand{display:flex;align-items:center;gap:9px;font-weight:900}
+.logo{background:#ff5252;color:white;padding:12px;border-radius:14px;font-size:23px}
+.brand small{display:block;color:#788796;font-size:12px;margin-top:5px}
+.clock{font-size:12px;background:#f3f8fc;border-radius:20px;padding:10px}
+.stats{padding:10px;display:flex;gap:7px;overflow:auto}
+.pill{white-space:nowrap;background:#fff;border-radius:25px;padding:11px 14px;
+box-shadow:0 3px 0 #cbdfe6;font-weight:bold}
+.toolbar{display:flex;gap:8px;padding:0 10px 10px;overflow:auto}
+.toolbar button{background:#fff;padding:11px 13px;border-radius:22px;
+box-shadow:0 3px 0 #cbdfe6;white-space:nowrap;font-weight:bold;color:#30465a}
+#city{position:relative;height:61vh;min-height:420px;max-height:720px;
+overflow:hidden;background:#bde6f1;border-top:3px solid white;
+border-bottom:3px solid white}
+.cityart{position:absolute;width:100%;height:100%;inset:0}
+.place{position:absolute;z-index:1;background:#183e62;color:#fff;
+border:2px solid #fff;border-radius:20px;padding:8px 11px;
+font-size:11px;font-weight:800;box-shadow:0 3px 0 #0002;
+white-space:nowrap}
+.place:active{transform:scale(.95)}
+.p1{left:4%;top:24%}.p2{right:4%;top:31%}
+.p3{left:7%;top:49%}.p4{right:5%;top:57%}
+.p5{left:30%;bottom:13%;background:#f04444}
+.mapbuttons{position:absolute;right:10px;bottom:12px;display:grid;gap:8px}
+.mapbuttons button{background:#fff;border-radius:13px;width:43px;height:43px;
+font-size:22px;box-shadow:0 3px 8px #1233}
+.bottomaction{padding:12px;display:flex;gap:9px}
+.bottomaction button{flex:1;background:#ef4444;color:white;padding:15px 8px;
+border-radius:15px;font-weight:900;box-shadow:0 4px 0 #bd3434}
+.bottomaction button.secondary{background:#fff;color:#23364a;box-shadow:0 4px 0 #d4e3e9}
+.tabs{position:sticky;bottom:0;background:#fff;display:flex;justify-content:space-around;
+padding:10px 2px max(10px,env(safe-area-inset-bottom));border-radius:20px 20px 0 0;
+box-shadow:0 -3px 15px #24435718;z-index:3}
+.tabs button{background:transparent;color:#748291;font-size:10px;font-weight:bold}
+.tabs b{display:block;font-size:21px;margin-bottom:4px}
+.section{display:none;background:#fff;margin:12px;padding:16px;border-radius:18px}
+.section h2{margin-top:0}
+.field{margin:12px 0}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
+.field input,.field select{width:100%;padding:13px;border:1px solid #d5e2e8;
+border-radius:10px;background:#f8fbfd}
+.action{width:100%;background:#16877e;color:#fff;padding:14px;border-radius:12px;font-weight:bold}
+.note{font-size:12px;color:#71808e;line-height:1.5}
+#overlay{display:none;position:fixed;inset:0;background:#142a4380;z-index:10;
+align-items:center;justify-content:center;padding:12px}
+.modal{width:100%;max-width:470px;max-height:90vh;overflow:auto;background:#fff;
+border-radius:24px;padding:18px}
+.modalhead{display:flex;justify-content:space-between;gap:12px;align-items:center}
+.close{background:#f7f1e4;border-radius:50%;width:42px;height:42px;font-size:24px}
+.steps{display:flex;justify-content:space-between;gap:5px;margin:18px 0}
+.steps div{text-align:center;flex:1;font-size:10px;color:#667789}
+.steps strong{display:grid;place-items:center;background:#edf2f6;width:32px;height:32px;
+border-radius:50%;margin:0 auto 7px}
+.steps .active strong{background:#36a56b;color:#fff}
+.idcard{border:2px solid #f5cf52;border-radius:17px;padding:14px;margin-top:16px;
+background:linear-gradient(135deg,#fff,#f2fbf9)}
+.idhead{background:#227f7b;color:#fff;padding:15px;border-radius:14px}
+.idnumber{font-size:23px;font-weight:900;overflow-wrap:anywhere}
+.resident{padding:12px 0;border-bottom:1px solid #e2ebef}
 </style>
 </head>
 <body>
-<header>
-<h1>✦ AETHERIA CITY</h1>
-<p>VIRTUAL CITY NETWORK</p>
+<header class="top">
+ <div class="brand">
+  <div class="logo">⌂</div>
+  <div>AETHERIA CITY<small id="population">0 warga terdaftar</small></div>
+ </div>
+ <div class="clock" id="clock">AETHERIA • ONLINE</div>
 </header>
-<nav>
-<button onclick="showSection('mapSection')">🗺️ Peta Kota</button>
-<button onclick="showSection('register')">＋ Daftar Penduduk</button>
-<button onclick="showSection('residents')">▤ Penduduk</button>
-</nav>
-<main>
+
 <div class="stats">
-<div class="stat"><strong id="count">0</strong><span>Penduduk</span></div>
-<div class="stat"><strong>5</strong><span>Distrik</span></div>
-<div class="stat"><strong>2D</strong><span>Mode Kota</span></div>
+ <div class="pill">🏙️ Kota Virtual</div>
+ <button class="pill" onclick="openKtw()">🪪 KTW Warga</button>
+ <button class="pill" onclick="showTab('friends')">👥 Teman</button>
+ <button class="pill" onclick="showTab('ranking')">🏆 Peringkat</button>
 </div>
 
-<section id="mapSection">
-<h2>🌐 Peta Virtual</h2>
-<p class="hint">Ketuk distrik untuk menjelajahi wilayah Aetheria.</p>
-<div id="map">
-<div class="city">
-<button class="district d1" onclick="district('Pusat Kota')"><b>🏙️</b>CENTRAL CITY</button>
-<button class="district d2" onclick="district('Distrik Neon')"><b>🌆</b>NEON DISTRICT</button>
-<button class="district d3" onclick="district('Kawasan Hunian')"><b>🏘️</b>RESIDENTIAL</button>
-<button class="district d4" onclick="district('Zona Industri')"><b>🏭</b>INDUSTRIAL ZONE</button>
-<button class="district d5" onclick="district('Balai Kota')"><b>🏛️</b>CITY HALL</button>
+<div class="toolbar">
+ <button onclick="openKtw()">🪪 Urus KTW</button>
+ <button onclick="showTab('residents')">👥 Warga</button>
+ <button onclick="showTab('explore')">🧭 Jelajah</button>
+</div>
+
+<div id="city">
+<svg class="cityart" viewBox="0 0 400 620" preserveAspectRatio="xMidYMid slice"
+xmlns="http://www.w3.org/2000/svg">
+<defs>
+ <pattern id="grass" width="90" height="80" patternUnits="userSpaceOnUse">
+  <rect width="90" height="80" fill="#b9e79b"/>
+  <path d="M0 20L90 65M-20 60L30 80" stroke="#c9efac" stroke-width="15"/>
+ </pattern>
+ <g id="house">
+  <path d="M-25 0L0 -17L26 0L0 16Z" fill="#e9d9b5"/>
+  <path d="M-25 0L0 16V38L-25 21Z" fill="#f4f0d9"/>
+  <path d="M0 16L26 0V21L0 38Z" fill="#e8c6a0"/>
+  <path d="M-29 0L0 -24L29 0L0 9Z" fill="#f07c6a" stroke="#fff" stroke-width="1.5"/>
+  <path d="M0 -24L29 0L0 9Z" fill="#d95852"/>
+  <rect x="-5" y="19" width="7" height="13" fill="#6585a1"/>
+  <rect x="-20" y="5" width="7" height="7" fill="#7fd6ed"/>
+ </g>
+ <g id="tree">
+  <path d="M0 0V15" stroke="#8a6246" stroke-width="4"/>
+  <circle cy="-5" r="10" fill="#5dc78b"/>
+  <circle cx="-6" cy="-10" r="6" fill="#8be0a3"/>
+ </g>
+</defs>
+<rect width="400" height="620" fill="url(#grass)"/>
+<!-- roads -->
+<path d="M-70 170L460 440M-50 465L430 180M80 -30L370 660"
+stroke="#d6d9d5" stroke-width="43" fill="none"/>
+<path d="M-70 170L460 440M-50 465L430 180M80 -30L370 660"
+stroke="#fff" stroke-width="2" stroke-dasharray="10 9" fill="none"/>
+<!-- city blocks -->
+<g transform="translate(78 118)"><use href="#house"/><use href="#house" transform="translate(54 22)"/><use href="#house" transform="translate(0 56)"/></g>
+<g transform="translate(282 105)"><use href="#house"/><use href="#house" transform="translate(52 28)"/><use href="#house" transform="translate(-2 56)"/></g>
+<g transform="translate(100 345)"><use href="#house"/><use href="#house" transform="translate(48 26)"/><use href="#house" transform="translate(-5 55)"/></g>
+<g transform="translate(300 360)"><use href="#house"/><use href="#house" transform="translate(50 28)"/><use href="#house" transform="translate(-5 57)"/></g>
+<!-- city hall -->
+<g transform="translate(205 270)">
+ <path d="M-48 8L0 -18L48 8L0 32Z" fill="#c4dce6"/>
+ <path d="M-39 8L0 28V82L-39 61Z" fill="#f4e6c8"/>
+ <path d="M0 28L39 8V61L0 82Z" fill="#e3ca9e"/>
+ <path d="M-43 8L0 -17L43 8L0 29Z" fill="#df5353"/>
+ <path d="M-20 9V-4L0 -15L20 -4V9" fill="#fff1cc"/>
+ <rect x="-5" y="41" width="10" height="22" fill="#7dcce5"/>
+</g>
+<!-- park -->
+<path d="M38 500L90 470L142 500L90 531Z" fill="#74ce87" stroke="#fff" stroke-width="2"/>
+<g transform="translate(66 492)"><use href="#tree"/></g>
+<g transform="translate(94 510)"><use href="#tree"/></g>
+<g transform="translate(119 492)"><use href="#tree"/></g>
+<!-- high rise -->
+<g transform="translate(302 475)">
+ <path d="M-22 0L0 -13L28 0L5 14Z" fill="#8ac7d7"/>
+ <path d="M-22 0L5 14V100L-22 85Z" fill="#6ca9c4"/>
+ <path d="M5 14L28 0V85L5 100Z" fill="#3f83a7"/>
+ <path d="M-17 8L0 17V25L-17 16ZM-17 27L0 36V44L-17 35ZM-17 46L0 55V63L-17 54ZM-17 65L0 74V82L-17 73Z" fill="#d4f7ff"/>
+ <path d="M7 22L22 13V22L7 31ZM7 42L22 33V42L7 51ZM7 62L22 53V62L7 71Z" fill="#c4f4ff"/>
+</g>
+<g transform="translate(35 80)"><use href="#tree"/></g>
+<g transform="translate(354 260)"><use href="#tree"/></g>
+<g transform="translate(159 405)"><use href="#tree"/></g>
+<g transform="translate(362 540)"><use href="#tree"/></g>
+</svg>
+<button class="place p1" onclick="district('Pusat Kota')">🏛️ PUSAT KOTA</button>
+<button class="place p2" onclick="district('Distrik Neon')">🌆 DISTRIK NEON</button>
+<button class="place p3" onclick="district('Residential')">🏘️ PERUMAHAN</button>
+<button class="place p4" onclick="district('Taman Aetheria')">🌳 TAMAN KOTA</button>
+<button class="place p5" onclick="district('Balai Kota')">🏢 BALAI KOTA</button>
+<div class="mapbuttons">
+ <button onclick="alert('Peta kota virtual Aetheria.')">⌖</button>
+ <button onclick="district('Pusat Kota')">⟳</button>
 </div>
 </div>
-<div class="panel">
-<strong id="districtName">AETHERIA CITY</strong>
-<p id="districtInfo" class="hint">Selamat datang di kota virtual kita!</p>
+
+<div class="bottomaction">
+ <button onclick="showTab('explore')">🎮 Main di kota</button>
+ <button class="secondary" onclick="openKtw()">＋ Daftar warga</button>
 </div>
+
+<section class="section" id="explore">
+<h2>🧭 Jelajah Aetheria</h2>
+<p id="districtInfo">Pilih tempat di peta untuk menjelajahi kota.</p>
+<p class="note">Ini adalah dunia simulasi. Fitur bermain bersama akan membutuhkan server online.</p>
+</section>
+<section class="section" id="friends">
+<h2>👥 Teman</h2><p class="note">Daftar warga yang tersedia di perangkat ini.</p>
+<div id="friendList"></div>
+</section>
+<section class="section" id="ranking">
+<h2>🏆 Peringkat Warga</h2><p class="note">Peringkat demo berdasarkan urutan pendaftaran, bukan peringkat global.</p>
+<div id="rankList"></div>
+</section>
+<section class="section" id="residents">
+<h2>🏘️ Penduduk Aetheria</h2><div id="residentList"></div>
 </section>
 
-<section class="panel" id="register">
-<h2>🪪 Pendaftaran Penduduk</h2>
-<p class="hint">Buat identitas karakter resmi Aetheria.</p>
-<form id="form">
-<label>Nama penduduk</label>
-<input id="name" maxlength="35" placeholder="Nama karakter kamu" required>
-<label>Username</label>
-<input id="username" maxlength="20" placeholder="@username" required>
-<label>Pekerjaan</label>
-<select id="job">
-<option>Warga Sipil</option>
-<option>Polisi</option>
-<option>Dokter</option>
-<option>Pedagang</option>
-<option>Pengusaha</option>
-<option>Pegawai Pemerintah</option>
-<option>Pengemudi</option>
-</select>
-<label>Distrik tempat tinggal</label>
-<select id="home">
-<option>Central City</option>
-<option>Neon District</option>
-<option>Residential</option>
-<option>Industrial Zone</option>
-</select>
-<button class="primary" type="submit">BUAT KARTU PENDUDUK</button>
-</form>
-</section>
+<nav class="tabs">
+<button onclick="openKtw()"><b>▣</b>KTW</button>
+<button onclick="showTab('explore')"><b>◈</b>Jelajah</button>
+<button onclick="showTab('residents')"><b>♧</b>Warga</button>
+<button onclick="showTab('ranking')"><b>▥</b>Peringkat</button>
+<button onclick="showTab('friends')"><b>☻</b>Teman</button>
+</nav>
 
-<section class="panel" id="residents">
-<h2>👥 Direktori Penduduk</h2>
-<p class="hint">Penduduk yang terdaftar di perangkat browser ini.</p>
-<div id="list">Belum ada penduduk terdaftar.</div>
-</section>
-
-<section class="panel" id="card">
-<h3>✦ AETHERIA CITIZEN CARD</h3>
-<p>KARTU IDENTITAS PENDUDUK VIRTUAL</p>
-<div class="id" id="cardId"></div>
-<h2 id="cardName"></h2>
-<p id="cardDetails"></p>
-<p class="hint">IDENTITAS SIMULASI • AETHERIA CITY</p>
-<button onclick="window.print()">CETAK / SIMPAN PDF</button>
-</section>
-</main>
-<footer>AETHERIA CITY © VIRTUAL WORLD<br>Versi 1.0 • Komunitas Digital</footer>
+<div id="overlay">
+<div class="modal">
+ <div class="modalhead">
+  <div><h2 style="margin:0">Balai Kota · Loket KTW</h2>
+  <p class="note">Kartu Tanda Warga Virtual Aetheria</p></div>
+  <button class="close" onclick="closeKtw()">×</button>
+ </div>
+ <div class="steps">
+  <div class="active"><strong>1</strong>Pendaftaran</div>
+  <div><strong>2</strong>Verifikasi</div>
+  <div><strong>3</strong>Pemeriksaan</div>
+  <div><strong>4</strong>KTW terbit</div>
+ </div>
+ <form id="ktwForm">
+  <div class="field"><label>Nama karakter</label><input id="citizenName" maxlength="35" required placeholder="Nama penduduk"></div>
+  <div class="field"><label>Username unik</label><input id="citizenUser" maxlength="20" required placeholder="contoh: partaa07"></div>
+  <div class="field"><label>Pekerjaan</label>
+   <select id="citizenJob"><option>Warga Sipil</option><option>Polisi</option><option>Dokter</option><option>Pedagang</option><option>Walikota</option><option>Pemadam Kebakaran</option></select>
+  </div>
+  <div class="field"><label>Tempat tinggal</label>
+   <select id="citizenHome"><option>Pusat Kota</option><option>Distrik Neon</option><option>Perumahan</option><option>Taman Kota</option></select>
+  </div>
+  <button class="action" type="submit">DAFTAR PENDUDUK</button>
+ </form>
+ <div id="citizenCard" class="idcard" hidden>
+  <div class="idhead">AETHERIA CITY<br><span class="idnumber" id="citizenId"></span><br>KARTU WARGA VIRTUAL</div>
+  <h2 id="citizenCardName"></h2><p id="citizenCardInfo"></p>
+  <p class="note">Kartu simulasi, bukan dokumen identitas resmi.</p>
+  <button class="action" onclick="window.print()">CETAK / SIMPAN PDF</button>
+ </div>
+ <p class="note">Prototipe ini menyimpan data di browser perangkatmu. Data belum dikirim ke server dan belum terlihat oleh pengguna lain.</p>
+</div>
+</div>
 
 <script>
-const key='aetheria_residents_v1';
-let residents=[];
-try{residents=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(residents))residents=[]}catch(e){residents=[]}
+const STORE='aetheria_city_citizens_v1';
+let citizens=[];
+try{citizens=JSON.parse(localStorage.getItem(STORE)||'[]');if(!Array.isArray(citizens))citizens=[]}catch(e){citizens=[]}
 
-function showSection(id){
-document.getElementById(id).scrollIntoView({behavior:'smooth'});
-}
+function openKtw(){document.getElementById('overlay').style.display='flex'}
+function closeKtw(){document.getElementById('overlay').style.display='none'}
 function district(name){
-document.getElementById('districtName').textContent=name;
-document.getElementById('districtInfo').textContent='Kamu sedang menjelajahi '+name+'. Selamat datang!';
+ document.getElementById('districtInfo').textContent='Kamu sedang berada di '+name+'. Selamat menjelajahi Aetheria!';
+ showTab('explore');
 }
-function render(){
-document.getElementById('count').textContent=residents.length;
-document.getElementById('list').innerHTML='';
-if(!residents.length){
-document.getElementById('list').textContent='Belum ada penduduk terdaftar.';
-return;
+function showTab(id){
+ document.querySelectorAll('.section').forEach(s=>s.style.display='none');
+ const el=document.getElementById(id);
+ if(el)el.style.display='block';
+ if(id==='residents'||id==='friends')renderResidents();
+ if(id==='ranking')renderRanking();
+ if(id==='explore')document.getElementById('explore').scrollIntoView({behavior:'smooth',block:'nearest'});
 }
-residents.forEach(r=>{
-const item=document.createElement('div');
-item.className='panel';
-const title=document.createElement('strong');
-title.textContent=r.name;
-const info=document.createElement('p');
-info.className='hint';
-info.textContent=r.id+' • '+r.job+' • '+r.home;
-const btn=document.createElement('button');
-btn.textContent='Lihat Kartu';
-btn.onclick=()=>viewCard(r);
-item.append(title,info,btn);
-document.getElementById('list').appendChild(item);
+function renderResidents(){
+ document.getElementById('population').textContent=citizens.length+' warga terdaftar';
+ ['residentList','friendList'].forEach(id=>{
+  const box=document.getElementById(id);box.replaceChildren();
+  if(!citizens.length){box.textContent='Belum ada warga. Daftar KTW untuk memulai!';return}
+  citizens.forEach(c=>{
+   const row=document.createElement('div');row.className='resident';
+   const name=document.createElement('b');name.textContent=c.name;
+   const info=document.createElement('p');info.className='note';
+   info.textContent='@'+c.username+' · '+c.job+' · '+c.home;
+   row.append(name,info);box.append(row);
+  });
+ });
+}
+function renderRanking(){
+ const box=document.getElementById('rankList');box.replaceChildren();
+ citizens.forEach((c,i)=>{
+  const row=document.createElement('p');row.className='resident';
+  row.textContent='#'+(i+1)+' '+c.name+' (@'+c.username+')';box.append(row);
+ });
+ if(!citizens.length)box.textContent='Belum ada warga.';
+}
+document.getElementById('ktwForm').addEventListener('submit',e=>{
+ e.preventDefault();
+ const name=document.getElementById('citizenName').value.trim();
+ const username=document.getElementById('citizenUser').value.trim().replace(/^@/,'');
+ if(!name||!username)return;
+ if(citizens.some(c=>c.username.toLowerCase()===username.toLowerCase())){
+  alert('Username ini sudah terdaftar di browser ini.');return;
+ }
+ const citizen={
+  id:'AET-'+Math.random().toString(36).slice(2,8).toUpperCase(),
+  name,username,job:document.getElementById('citizenJob').value,
+  home:document.getElementById('citizenHome').value
+ };
+ citizens.push(citizen);
+ try{localStorage.setItem(STORE,JSON.stringify(citizens))}
+ catch(err){citizens.pop();alert('Penyimpanan browser gagal.');return}
+ document.getElementById('citizenId').textContent=citizen.id;
+ document.getElementById('citizenCardName').textContent=citizen.name;
+ document.getElementById('citizenCardInfo').textContent='@'+citizen.username+' · '+citizen.job+' · '+citizen.home;
+ document.getElementById('citizenCard').hidden=false;
+ document.getElementById('ktwForm').hidden=true;
+ renderResidents();
 });
-}
-function viewCard(r){
-document.getElementById('cardId').textContent=r.id;
-document.getElementById('cardName').textContent=r.name;
-document.getElementById('cardDetails').textContent=r.username+' | '+r.job+' | '+r.home;
-document.getElementById('card').style.display='block';
-showSection('card');
-}
-document.getElementById('form').addEventListener('submit',e=>{
-e.preventDefault();
-const name=document.getElementById('name').value.trim();
-const username=document.getElementById('username').value.trim();
-if(!name||!username)return;
-if(residents.some(r=>r.username.toLowerCase()===username.toLowerCase())){
-alert('Username sudah digunakan pada browser ini.');
-return;
-}
-const r={
-id:'AET-'+Date.now().toString().slice(-8),
-name,username,job:document.getElementById('job').value,
-home:document.getElementById('home').value
-};
-residents.push(r);
-try{localStorage.setItem(key,JSON.stringify(residents));}
-catch(err){alert('Penyimpanan browser gagal. Periksa ruang penyimpanan.');return;}
-render();
-viewCard(r);
-e.target.reset();
-});
-render();
+document.getElementById('clock').textContent='🌈 AETHERIA • KOTA VIRTUAL';
+renderResidents();
 </script>
 </body>
 </html>
