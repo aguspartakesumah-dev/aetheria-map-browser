@@ -3,349 +3,354 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#070b14">
-<title>Aetheria Map Browser</title>
-
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-
+<title>Aetheria Virtual City</title>
 <style>
-* {
-  box-sizing: border-box;
+:root {
+  --bg:#070b14; --panel:#101a2b; --cyan:#42e8ff;
+  --purple:#a78bfa; --text:#eaf7ff; --muted:#8da5bd;
 }
-
+* { box-sizing:border-box }
 body {
-  margin: 0;
-  background: #070b14;
-  color: #eaf7ff;
-  font-family: Arial, sans-serif;
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Arial,sans-serif;
 }
-
 header {
-  padding: 20px 16px;
-  background: #0d1423;
-  border-bottom: 1px solid #16435b;
-  box-shadow: 0 4px 25px #00d9ff12;
+  padding:20px 16px; background:#0c1423;
+  border-bottom:1px solid #1d3e54;
 }
-
-.logo {
-  font-size: 22px;
-  font-weight: 800;
-  color: #37e5ff;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  margin-top: 6px;
-  font-size: 11px;
-  letter-spacing: 2px;
-  color: #849bb3;
-}
-
-.search {
-  display: flex;
-  gap: 8px;
-  padding: 14px;
-}
-
-input {
-  flex: 1;
-  width: 100%;
-  min-width: 0;
-  padding: 13px;
-  color: white;
-  background: #111c2c;
-  border: 1px solid #23455d;
-  border-radius: 10px;
-  outline: none;
-  font-size: 14px;
-}
-
-input:focus {
-  border-color: #37e5ff;
-}
-
+.logo { font-size:23px;font-weight:900;color:var(--cyan) }
+.sub { font-size:11px;letter-spacing:2px;color:var(--muted);margin-top:7px }
+nav { display:flex;gap:8px;padding:12px;overflow:auto }
 button {
-  border: 1px solid #1b617a;
-  background: #103347;
-  color: #4be7ff;
-  border-radius: 10px;
-  padding: 12px;
-  font-weight: bold;
-  cursor: pointer;
+  border:1px solid #28516b;border-radius:9px;padding:11px 14px;
+  color:var(--cyan);background:#102b3d;font-weight:bold;cursor:pointer;
 }
-
-button:active {
-  background: #20536b;
+button:active { opacity:.7 }
+nav button { flex-shrink:0 }
+button.active { background:#16445a;border-color:var(--cyan) }
+main { padding:12px }
+.stats {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin-bottom:12px;
 }
-
-.tools {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-  padding: 0 14px 12px;
+.stat {
+  background:var(--panel);border:1px solid #20364d;
+  border-radius:10px;padding:12px 5px;text-align:center;
 }
-
-#status {
-  padding: 12px 14px;
-  background: #0d1423;
-  color: #a4bdd0;
-  font-size: 12px;
-  border-top: 1px solid #182c40;
+.stat strong { display:block;color:var(--cyan);font-size:20px }
+.stat span { font-size:10px;color:var(--muted) }
+.mapbox {
+  border:1px solid #23516a;border-radius:13px;
+  overflow:hidden;position:relative;background:#0a1524;
 }
-
-#map {
-  height: 62vh;
-  min-height: 350px;
-  width: 100%;
-  background: #101827;
-}
-
+.maphead { padding:12px;background:#101a2b;display:flex;justify-content:space-between;gap:8px;align-items:center }
+.maphead small { color:var(--muted) }
+#citymap { width:100%;display:block;touch-action:pan-y }
+.district { cursor:pointer }
+.district:active { opacity:.7 }
+.mapnote { padding:11px;color:var(--muted);font-size:12px }
 .panel {
-  padding: 16px;
-  background: #0d1423;
-  border-top: 1px solid #18364c;
+  margin-top:14px;padding:16px;background:var(--panel);
+  border:1px solid #20364d;border-radius:12px;
 }
-
-.panel h3 {
-  margin: 0 0 8px;
-  color: #37e5ff;
+h2 { margin:0 0 12px;font-size:17px;color:var(--cyan) }
+p { color:var(--muted);font-size:13px;line-height:1.6 }
+input,select {
+  display:block;width:100%;padding:13px;margin:9px 0;
+  border-radius:8px;border:1px solid #29445d;
+  background:#091321;color:white;font-size:15px;
 }
-
-.panel p {
-  color: #9bb1c4;
-  font-size: 13px;
-  line-height: 1.6;
+.full { width:100%;margin-top:7px }
+.cardid {
+  padding:16px;border:1px solid var(--cyan);border-radius:12px;
+  background:linear-gradient(135deg,#102d40,#17172f);
 }
-
-footer {
-  text-align: center;
-  padding: 18px 10px;
-  font-size: 11px;
-  color: #7891a6;
-}
-
-.leaflet-popup-content-wrapper,
-.leaflet-popup-tip {
-  background: #101d2c;
-  color: #effaff;
-}
-
-.leaflet-control-zoom a {
-  background: #101d2c !important;
-  color: #37e5ff !important;
-  border-color: #29475c !important;
-}
-
-.leaflet-control-attribution {
-  font-size: 9px !important;
-}
+.idtop { color:var(--cyan);font-weight:bold;letter-spacing:2px }
+.idnumber { font-size:21px;font-weight:bold;margin:15px 0 }
+.hidden { display:none!important }
+footer { text-align:center;padding:22px;color:#708ba5;font-size:11px }
+#notice { font-size:12px;color:var(--muted);margin-top:9px }
 </style>
 </head>
-
 <body>
 <header>
-  <div class="logo">✦ AETHERIA MAP</div>
-  <div class="subtitle">INTERACTIVE MAP BROWSER</div>
+  <div class="logo">✦ AETHERIA</div>
+  <div class="sub">VIRTUAL CITY • DIGITAL CIVILIZATION</div>
 </header>
 
-<div class="search">
-  <input id="query"
-    placeholder="Cari kota atau tempat..."
-    aria-label="Cari lokasi">
-  <button id="searchBtn">CARI</button>
-</div>
+<nav>
+  <button class="active" data-page="city">Peta Kota</button>
+  <button data-page="register">Daftar Penduduk</button>
+  <button data-page="identity">Kartu Penduduk</button>
+</nav>
 
-<div class="tools">
-  <button id="locateBtn">◎ Lokasi Saya</button>
-  <button id="pinBtn">＋ Tambah Pin</button>
-</div>
+<main>
+<section id="city">
+  <div class="stats">
+    <div class="stat"><strong id="population">0</strong><span>Penduduk di perangkat ini</span></div>
+    <div class="stat"><strong>04</strong><span>Distrik kota</span></div>
+    <div class="stat"><strong>2D</strong><span>Virtual world</span></div>
+  </div>
 
-<div id="status">Sistem siap. Selamat menjelajah!</div>
-<div id="map"></div>
+  <div class="mapbox">
+    <div class="maphead">
+      <div><b>MAP // AETHERIA</b><br><small>Pilih distrik untuk melihat detail</small></div>
+      <small>● ONLINE DEMO</small>
+    </div>
 
-<section class="panel">
-  <h3>EXPLORER CONSOLE</h3>
-  <p>
-    Cari tempat, jelajahi peta, dan tandai lokasi
-    pilihanmu dengan fitur pin.
-  </p>
-  <button id="resetBtn">⌖ Kembali ke Peta Awal</button>
+    <svg id="citymap" viewBox="0 0 360 470"
+         xmlns="http://www.w3.org/2000/svg"
+         aria-label="Peta virtual Aetheria">
+      <defs>
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M20 0H0V20" fill="none" stroke="#173047" stroke-width=".7"/>
+        </pattern>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <rect width="360" height="470" fill="#091523"/>
+      <rect width="360" height="470" fill="url(#grid)"/>
+
+      <!-- Jalan kota -->
+      <g fill="none" stroke-linecap="round">
+        <path d="M-20 125L380 125 M-20 280L380 280"
+          stroke="#173c51" stroke-width="25"/>
+        <path d="M115 -10L115 490 M255 -10L255 490"
+          stroke="#173c51" stroke-width="22"/>
+        <path d="M-20 125L380 125 M-20 280L380 280 M115 -10L115 490 M255 -10L255 490"
+          stroke="#28677d" stroke-width="1.5" stroke-dasharray="7 7"/>
+        <path d="M-20 125L380 125 M-20 280L380 280 M115 -10L115 490 M255 -10L255 490"
+          stroke="#36d8f5" stroke-width="1" opacity=".65"/>
+      </g>
+
+      <!-- Distrik -->
+      <g class="district" data-name="Pusat Pemerintahan" data-detail="Balai Kota Aetheria dan pusat administrasi.">
+        <rect x="17" y="20" width="82" height="86" rx="7" fill="#172d46" stroke="#42e8ff"/>
+        <rect x="32" y="43" width="52" height="40" rx="3" fill="#20465d" stroke="#42e8ff"/>
+        <path d="M29 43L58 29L87 43Z" fill="#42e8ff" opacity=".8"/>
+        <path d="M43 51V76 M58 51V76 M73 51V76" stroke="#b3f5ff" stroke-width="3"/>
+        <text x="58" y="94" fill="#fff" font-size="8" text-anchor="middle">CITY HALL</text>
+      </g>
+
+      <g class="district" data-name="Neon Business District" data-detail="Kawasan bisnis, kantor, dan pusat perdagangan.">
+        <rect x="153" y="20" width="86" height="86" rx="7" fill="#211b3f" stroke="#a78bfa"/>
+        <rect x="164" y="46" width="20" height="39" fill="#473578" stroke="#a78bfa"/>
+        <rect x="190" y="32" width="20" height="53" fill="#3d3470" stroke="#a78bfa"/>
+        <rect x="216" y="52" width="13" height="33" fill="#473578" stroke="#a78bfa"/>
+        <g fill="#42e8ff">
+          <rect x="169" y="52" width="4" height="5"/><rect x="169" y="63" width="4" height="5"/>
+          <rect x="196" y="40" width="5" height="5"/><rect x="204" y="40" width="3" height="5"/>
+          <rect x="196" y="52" width="5" height="5"/><rect x="204" y="52" width="3" height="5"/>
+        </g>
+        <text x="196" y="96" fill="#fff" font-size="8" text-anchor="middle">BUSINESS</text>
+      </g>
+
+      <g class="district" data-name="Residential District" data-detail="Kawasan rumah dan lingkungan penduduk.">
+        <rect x="17" y="151" width="82" height="111" rx="7" fill="#14352f" stroke="#43e6b0"/>
+        <g fill="#1d6254" stroke="#43e6b0">
+          <rect x="27" y="164" width="24" height="22"/><rect x="62" y="164" width="24" height="22"/>
+          <rect x="27" y="197" width="24" height="22"/><rect x="62" y="197" width="24" height="22"/>
+          <rect x="43" y="228" width="24" height="22"/>
+        </g>
+        <text x="58" y="255" fill="#fff" font-size="7" text-anchor="middle">RESIDENCE</text>
+      </g>
+
+      <g class="district" data-name="Police Headquarters" data-detail="Markas polisi virtual Aetheria.">
+        <rect x="153" y="151" width="86" height="111" rx="7" fill="#142a4c" stroke="#6ca5ff"/>
+        <rect x="171" y="174" width="50" height="49" rx="3" fill="#1d4771" stroke="#6ca5ff"/>
+        <path d="M196 181L211 187V199Q207 211 196 216Q185 211 181 199V187Z" fill="#6ca5ff"/>
+        <text x="196" y="198" text-anchor="middle" fill="#081321" font-size="16" font-weight="bold">★</text>
+        <text x="196" y="244" fill="#fff" font-size="8" text-anchor="middle">POLICE HQ</text>
+      </g>
+
+      <g class="district" data-name="Central Park" data-detail="Taman kota dan tempat berkumpul warga.">
+        <rect x="17" y="306" width="82" height="142" rx="7" fill="#10392f" stroke="#43e6b0"/>
+        <g fill="#1a7056" stroke="#43e6b0">
+          <circle cx="39" cy="330" r="11"/><circle cx="76" cy="330" r="11"/>
+          <circle cx="39" cy="365" r="11"/><circle cx="76" cy="365" r="11"/>
+          <circle cx="39" cy="400" r="11"/><circle cx="76" cy="400" r="11"/>
+        </g>
+        <path d="M58 315V435 M25 382H91" stroke="#b2ffe2" stroke-width="2" stroke-dasharray="3 4"/>
+        <text x="58" y="436" fill="#fff" font-size="8" text-anchor="middle">CENTRAL PARK</text>
+      </g>
+
+      <g class="district" data-name="Technology District" data-detail="Kawasan teknologi, laboratorium, dan inovasi.">
+        <rect x="153" y="306" width="86" height="142" rx="7" fill="#322344" stroke="#d18bff"/>
+        <rect x="171" y="329" width="50" height="66" rx="4" fill="#4a3064" stroke="#d18bff"/>
+        <path d="M181 345H211 M181 357H211 M181 369H202" stroke="#42e8ff" stroke-width="3"/>
+        <circle cx="196" cy="414" r="12" fill="none" stroke="#d18bff" stroke-width="2"/>
+        <circle cx="196" cy="414" r="5" fill="#42e8ff" filter="url(#glow)"/>
+        <text x="196" y="438" fill="#fff" font-size="7" text-anchor="middle">TECH DISTRICT</text>
+      </g>
+
+      <g class="district" data-name="Harbor District" data-detail="Kawasan pelabuhan virtual dan pusat logistik.">
+        <rect x="275" y="151" width="68" height="297" rx="7" fill="#103047" stroke="#42b9ff"/>
+        <path d="M283 180H335 M283 195H335 M283 210H335 M283 225H335 M283 240H335"
+          stroke="#42b9ff" stroke-width="1" opacity=".7"/>
+        <rect x="285" y="270" width="46" height="22" fill="#1b5875" stroke="#42b9ff"/>
+        <rect x="285" y="301" width="46" height="22" fill="#1b5875" stroke="#42b9ff"/>
+        <rect x="285" y="332" width="46" height="22" fill="#1b5875" stroke="#42b9ff"/>
+        <text x="309" y="385" fill="#fff" font-size="8" text-anchor="middle">HARBOR</text>
+        <text x="309" y="398" fill="#9ccfff" font-size="7" text-anchor="middle">LOGISTICS</text>
+      </g>
+
+      <text x="180" y="462" fill="#42e8ff" font-size="8" text-anchor="middle" letter-spacing="2">AETHERIA CITY GRID</text>
+    </svg>
+    <div class="mapnote">Peta fiksi untuk simulasi kota. Ketuk distrik untuk melihat keterangannya.</div>
+  </div>
+
+  <div class="panel">
+    <h2 id="districtTitle">SELAMAT DATANG DI AETHERIA</h2>
+    <p id="districtDetail">Pilih distrik pada peta untuk mengenal kawasan kota virtual.</p>
+    <button id="goRegister" class="full">＋ Daftar Menjadi Penduduk</button>
+  </div>
 </section>
 
-<footer>
-  AETHERIA MAP BROWSER<br>
-  Map data © OpenStreetMap contributors
-</footer>
+<section id="register" class="hidden">
+  <div class="panel">
+    <h2>PENDAFTARAN PENDUDUK</h2>
+    <p>Buat identitas untuk karakter penduduk virtualmu.</p>
+    <form id="residentForm">
+      <label for="residentName">Nama penduduk</label>
+      <input id="residentName" maxlength="35" required placeholder="Contoh: Parta Aether">
+      <label for="residentJob">Pekerjaan yang diinginkan</label>
+      <select id="residentJob">
+        <option>Penduduk</option>
+        <option>Polisi</option>
+        <option>Petugas Medis</option>
+        <option>Pengusaha</option>
+        <option>Pegawai Balai Kota</option>
+        <option>Teknisi</option>
+      </select>
+      <button class="full" type="submit">BUAT KARTU PENDUDUK</button>
+    </form>
+    <div id="notice">Demo: data akan disimpan di browser perangkat ini saja.</div>
+  </div>
+</section>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<section id="identity" class="hidden">
+  <div class="panel">
+    <h2>DIGITAL RESIDENT ID</h2>
+    <div id="emptyCard">
+      <p>Kamu belum memiliki kartu penduduk di browser ini. Daftar dahulu untuk membuat kartu.</p>
+      <button id="registerFromCard">Daftar Sekarang</button>
+    </div>
+    <div id="residentCard" class="cardid hidden">
+      <div class="idtop">AETHERIA • RESIDENT</div>
+      <p style="color:#a6eaff">KARTU IDENTITAS VIRTUAL</p>
+      <div class="idnumber" id="cardNumber">AET-000001</div>
+      <div style="font-size:21px;font-weight:bold" id="cardName"></div>
+      <p id="cardJob"></p>
+      <p id="cardDate"></p>
+      <small style="color:#ffdf9a">IDENTITAS SIMULASI — BUKAN DOKUMEN RESMI</small>
+    </div>
+    <button id="deleteResident" class="full hidden">Hapus data lokal</button>
+  </div>
+</section>
+</main>
+
+<footer>AETHERIA VIRTUAL CITY · A WORLD OF YOUR OWN</footer>
 
 <script>
-const statusBox = document.getElementById("status");
+const $ = id => document.getElementById(id);
+const storageKey = "aetheria_demo_resident_v1";
 
-function status(message) {
-  statusBox.textContent = message;
+function getResident() {
+  try {
+    return JSON.parse(localStorage.getItem(storageKey) || "null");
+  } catch {
+    return null;
+  }
 }
 
-// Tampilan awal: Bandung dan sekitarnya
-const map = L.map("map", {
-  zoomControl: false
-}).setView([-6.9147, 107.6098], 11);
+function showPage(page) {
+  ["city", "register", "identity"].forEach(id => {
+    $(id).classList.toggle("hidden", id !== page);
+  });
+  document.querySelectorAll("nav button").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.page === page);
+  });
+  if (page === "identity") renderCard();
+  window.scrollTo(0, 0);
+}
 
-L.control.zoom({
-  position: "bottomright"
-}).addTo(map);
+document.querySelectorAll("nav button").forEach(btn => {
+  btn.addEventListener("click", () => showPage(btn.dataset.page));
+});
 
-// Peta gelap
-L.tileLayer(
-  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
-  {
-    subdomains: "abcd",
-    maxZoom: 20,
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
-  }
-).addTo(map);
+$("goRegister").addEventListener("click", () => showPage("register"));
+$("registerFromCard").addEventListener("click", () => showPage("register"));
 
-// Grup untuk semua pin yang dibuat
-const pins = L.layerGroup().addTo(map);
+document.querySelectorAll(".district").forEach(district => {
+  district.addEventListener("click", () => {
+    $("districtTitle").textContent = district.dataset.name.toUpperCase();
+    $("districtDetail").textContent = district.dataset.detail;
+  });
+});
 
-async function searchPlace() {
-  const query = document.getElementById("query")
-    .value.trim();
+function renderCard() {
+  const resident = getResident();
+  const exists = !!resident;
+  $("emptyCard").classList.toggle("hidden", exists);
+  $("residentCard").classList.toggle("hidden", !exists);
+  $("deleteResident").classList.toggle("hidden", !exists);
 
-  if (!query) {
-    status("Masukkan nama lokasi terlebih dahulu.");
+  if (!resident) return;
+
+  $("cardNumber").textContent = resident.id;
+  $("cardName").textContent = resident.name;
+  $("cardJob").textContent = "PEKERJAAN: " + resident.job;
+  $("cardDate").textContent = "BERGABUNG: " + resident.date;
+}
+
+function updatePopulation() {
+  $("population").textContent = getResident() ? "1" : "0";
+}
+
+$("residentForm").addEventListener("submit", event => {
+  event.preventDefault();
+
+  const name = $("residentName").value.trim();
+  if (!name) return;
+
+  if (getResident()) {
+    alert("Browser ini sudah memiliki kartu penduduk. Hapus data lokal lama jika ingin membuat ulang.");
+    showPage("identity");
     return;
   }
 
-  status("Sedang mencari lokasi...");
+  const resident = {
+    id: "AET-" + Date.now().toString().slice(-8),
+    name,
+    job: $("residentJob").value,
+    date: new Date().toLocaleDateString("id-ID", {
+      day: "2-digit", month: "short", year: "numeric"
+    })
+  };
 
   try {
-    const url =
-      "https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&q="
-      + encodeURIComponent(query);
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error("Pencarian tidak tersedia");
-    }
-
-    const results = await response.json();
-
-    if (results.length === 0) {
-      status("Lokasi tidak ditemukan. Coba kata lain.");
-      return;
-    }
-
-    const place = results[0];
-    const lat = Number(place.lat);
-    const lon = Number(place.lon);
-
-    map.setView([lat, lon], 15);
-
-    L.marker([lat, lon])
-      .addTo(pins)
-      .bindPopup(place.display_name)
-      .openPopup();
-
-    status("Ditemukan: " + place.display_name);
-  } catch (error) {
-    status("Pencarian gagal. Periksa koneksi internet.");
+    localStorage.setItem(storageKey, JSON.stringify(resident));
+    updatePopulation();
+    showPage("identity");
+  } catch {
+    alert("Penyimpanan browser tidak tersedia. Periksa pengaturan browser.");
   }
-}
-
-document.getElementById("searchBtn")
-  .addEventListener("click", searchPlace);
-
-document.getElementById("query")
-  .addEventListener("keydown", event => {
-    if (event.key === "Enter") {
-      searchPlace();
-    }
-  });
-
-// Lokasi perangkat
-document.getElementById("locateBtn")
-  .addEventListener("click", () => {
-    if (!navigator.geolocation) {
-      status("Browser tidak mendukung lokasi perangkat.");
-      return;
-    }
-
-    status("Meminta izin lokasi...");
-
-    navigator.geolocation.getCurrentPosition(
-      position => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-
-        map.setView([lat, lon], 16);
-
-        L.marker([lat, lon])
-          .addTo(pins)
-          .bindPopup("Lokasi perangkat kamu")
-          .openPopup();
-
-        status("Lokasi berhasil ditemukan.");
-      },
-      () => {
-        status("Lokasi gagal. Periksa izin lokasi browser.");
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 12000
-      }
-    );
-  });
-
-// Tambah pin dengan mengetuk peta
-let pinMode = false;
-
-document.getElementById("pinBtn")
-  .addEventListener("click", () => {
-    pinMode = !pinMode;
-
-    map.getContainer().style.cursor =
-      pinMode ? "crosshair" : "";
-
-    status(
-      pinMode
-        ? "Ketuk lokasi di peta untuk membuat pin."
-        : "Mode pin dimatikan."
-    );
-  });
-
-map.on("click", event => {
-  if (!pinMode) return;
-
-  const lat = event.latlng.lat;
-  const lon = event.latlng.lng;
-
-  L.marker(event.latlng)
-    .addTo(pins)
-    .bindPopup(
-      "<b>PIN AETHERIA</b><br>" +
-      "Latitude: " + lat.toFixed(5) +
-      "<br>Longitude: " + lon.toFixed(5)
-    )
-    .openPopup();
-
-  pinMode = false;
-  map.getContainer().style.cursor = "";
-
-  status("Pin berhasil ditambahkan.");
 });
 
-// Kembali ke posisi awal
-document.getElementById("resetBtn")
-  .addEventListener("click", () => {
-    map.setView([-6.9147, 107.6098], 11);
-    status("Kembali ke peta awal.");
-  });
+$("deleteResident").addEventListener("click", () => {
+  if (!confirm("Hapus kartu penduduk dari browser ini?")) return;
+  localStorage.removeItem(storageKey);
+  updatePopulation();
+  renderCard();
+});
+
+updatePopulation();
+renderCard();
 </script>
 </body>
-</html>
-  
+    </html>
+
